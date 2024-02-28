@@ -24,9 +24,9 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-4gd2p)y1_k65+x96*-pibg54nc-_+sz8$w-2e^4$dh844q_o-&'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['www.careerbouwen.com']
 
 
 # Application definition
@@ -77,10 +77,24 @@ WSGI_APPLICATION = 'CBproject.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.sqlite3',
+#         'NAME': BASE_DIR / 'db.sqlite3',
+#     }
+# }
+
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.mysql',
+        'NAME': 'techolastechnolo$careerbouwen_jobportal',
+        'USER':'techolastechnolo',
+        'PASSWORD':'careerbouwen',
+        'HOST':'techolastechnologies.mysql.pythonanywhere-services.com',
+        'PORT':'3306',
+        'OPTIONS': {
+            'init_command': 'SET sql_mode="STRICT_TRANS_TABLES"',
+        }
     }
 }
 

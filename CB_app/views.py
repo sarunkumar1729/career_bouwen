@@ -16,7 +16,7 @@ def Index_Page(request):
         jobs = Job.objects.filter(status=Job.ACTIVE).order_by('-created_at')
     else:
         jobs = Job.objects.filter(status=Job.ACTIVE).order_by('-created_at')[:6]
-    
+
     return render(request,'Index_Page.html',{'jobs':jobs})
 
 
@@ -85,7 +85,7 @@ def Profile(request):
         else:
             form = JobSeekerProfileForm()
 
-    return render(request, 'profile.html', {'form': form})
+    return render(request, 'Profile.html', {'form': form})
 
 
 
@@ -119,7 +119,7 @@ def update_user_profile(user_profile, form):
         user_profile.profile_pic = form.files['profile_pic']
 
     user_profile.save()
-    
+
 
 
 
@@ -163,7 +163,7 @@ def SignOut(request):
 @login_required(login_url='SignIn')
 def Profile_Page(request):
     user_profile = request.user.userprofile
-    
+
     if user_profile.is_employer:
         # If the user is an employer, pass the employer's data
         data = {
@@ -191,11 +191,11 @@ def Profile_Page(request):
             # Add other job seeker-specific data as needed
         }
 
-    return render(request, 'profile_page.html', data)
-        
-        
-        
-@login_required(login_url='SignIn')      
+    return render(request, 'Profile_Page.html', data)
+
+
+
+@login_required(login_url='SignIn')
 def Edit_Profile(request):
     user_profile = request.user.userprofile
 
@@ -233,7 +233,7 @@ def Add_Job(request):
             return redirect('Dashboard')
     else:
         form = AddJobForm()
-    
+
     return render(request, 'Add_Job.html', {'form': form})
 
 
@@ -246,14 +246,14 @@ def Job_Detail(request, job_id):
     has_applied = job.applications.filter(created_by=user).exists()
 
     context = {'job': job, 'has_applied': has_applied}
-    
+
     return render(request, 'Job_Detail.html',context)
 
 
 @login_required(login_url='SignIn')
 def Applied_Candidates(request,job_id):
     job = Job.objects.get(pk=job_id)
-    
+
     return render(request, 'Applied_Candidates.html', {'job': job})
 
 
@@ -291,12 +291,12 @@ def Apply_Job(request, job_id):
             application.created_by = request.user
             application.save()
 
-            create_notification(request, job.created_by, 'application', extra_id=application.id) 
+            create_notification(request, job.created_by, 'application', extra_id=application.id)
 
             return redirect('Dashboard')
     else:
         form = ApplicationForm()
-    
+
     return render(request, 'Apply_Job.html', {'form': form, 'job': job})
 
 
@@ -308,7 +308,7 @@ def View_Application(request, application_id):
         application = get_object_or_404(Application, pk=application_id, job__created_by=request.user)
     else:
         application = get_object_or_404(Application, pk=application_id, created_by=request.user)
-    
+
     if request.method == 'POST':
         content = request.POST.get('content')
 
@@ -318,8 +318,8 @@ def View_Application(request, application_id):
             create_notification(request, application.created_by, 'message', extra_id=application.id)
 
             return redirect('View_Application', application_id=application_id)
-        
-    
+
+
     return render(request, 'View_Application.html', {'application': application})
 
 
@@ -327,7 +327,7 @@ def View_Application(request, application_id):
 def View_Candidate_Profile(request, candidate_id):
     candidate = get_object_or_404(User, pk=candidate_id)
     candidate_profile = Userprofile.objects.get(user=candidate)
-    
+
     return render(request, 'View_Candidate_Profile.html', {'candidate': candidate, 'candidate_profile': candidate_profile})
 
 
@@ -343,14 +343,14 @@ def Notifications(request):
         notification.save()
 
         context = {}
-        
+
         if notification.notification_type == Notification.MESSAGE:
             return redirect('View_Application', application_id=notification.extra_id)
         elif notification.notification_type == Notification.APPLICATION:
             return redirect('View_Application', application_id=notification.extra_id)
         elif notification.notification_type == Notification.REJECTED_APPLICATION:
             return redirect('View_Application', application_id=notification.extra_id)
-    
+
     return render(request, 'Notifications.html')
 
 
@@ -365,12 +365,11 @@ def Reject_Application(request, application_id):
             # Set the application status to 'rejected'
             application.status = Application.REJECTED
             application.save()
-            
+
             create_notification(request, application.created_by, 'rejected_application', extra_id=application.id)
 
             return redirect('Dashboard')
-        
-        
-        
 
-    
+
+
+
